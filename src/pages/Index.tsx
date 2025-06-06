@@ -51,61 +51,63 @@ const Index = () => {
         <source src="/path-to-your-romantic-song.mp3" type="audio/mpeg" />
       </audio>
 
-      <div className="flex items-center justify-center min-h-screen p-4">
+      <div className="flex items-center justify-center min-h-screen p-2 sm:p-4">
         {!surpriseStarted ? (
-          <div className="text-center animate-fade-in">
-            <div className="mb-8">
+          <div className="text-center animate-fade-in px-4 max-w-md">
+            <div className="mb-6 sm:mb-8">
               <Heart 
-                size={80} 
-                className="text-romantic-rose mx-auto animate-heart-beat fill-current" 
+                size={60} 
+                className="text-romantic-rose mx-auto animate-heart-beat fill-current sm:w-20 sm:h-20" 
               />
             </div>
             
-            <h1 className="dancing-text text-6xl md:text-8xl text-romantic-deep mb-6 animate-slide-up">
+            <h1 className="dancing-text text-4xl sm:text-6xl md:text-8xl text-romantic-deep mb-4 sm:mb-6 animate-slide-up leading-tight">
               Para Meu Amor
             </h1>
             
-            <p className="text-romantic-deep/70 text-lg md:text-xl mb-8 max-w-md mx-auto">
+            <p className="text-romantic-deep/70 text-base sm:text-lg md:text-xl mb-6 sm:mb-8 max-w-sm mx-auto leading-relaxed">
               Uma surpresa especial está esperando por você...
             </p>
             
             <button
               onClick={startSurprise}
-              className="romantic-button animate-heart-beat"
+              className="romantic-button animate-heart-beat text-lg sm:text-xl px-6 py-3 sm:px-8 sm:py-4"
             >
               💕 Clique para começar a surpresa 💕
             </button>
           </div>
         ) : (
-          <div className="w-full max-w-6xl mx-auto">
+          <div className="w-full max-w-7xl mx-auto px-2 sm:px-4">
             {/* Header com controle de música */}
-            <div className="text-center mb-8">
+            <div className="text-center mb-4 sm:mb-8">
               <button
                 onClick={toggleMusic}
                 className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm 
-                         text-romantic-deep px-4 py-2 rounded-full shadow-lg 
-                         hover:shadow-xl transition-all duration-300"
+                         text-romantic-deep px-3 py-2 sm:px-4 sm:py-2 rounded-full shadow-lg 
+                         hover:shadow-xl transition-all duration-300 text-sm"
               >
-                {musicPlaying ? <Pause size={20} /> : <Play size={20} />}
-                <span className="text-sm font-medium">
+                {musicPlaying ? <Pause size={18} /> : <Play size={18} />}
+                <span className="text-xs sm:text-sm font-medium">
                   {musicPlaying ? 'Pausar Música' : 'Tocar Música'}
                 </span>
               </button>
             </div>
 
-            <div className="grid lg:grid-cols-2 gap-8 items-start">
+            <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 items-start">
               {/* Slideshow de fotos */}
-              <div className="romantic-card">
-                <PhotoSlideshow />
+              <div className="w-full">
+                <div className="romantic-card p-4 sm:p-6 lg:p-8">
+                  <PhotoSlideshow />
+                </div>
               </div>
 
               {/* Mensagem e contador */}
-              <div className="space-y-6">
-                <div className="romantic-card">
+              <div className="w-full space-y-4 sm:space-y-6">
+                <div className="romantic-card p-4 sm:p-6 lg:p-8">
                   <RomanticMessage />
                 </div>
                 
-                <div className="romantic-card">
+                <div className="romantic-card p-4 sm:p-6 lg:p-8">
                   <LoveCounter startDate="2023-01-01" />
                 </div>
               </div>

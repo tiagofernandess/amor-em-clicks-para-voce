@@ -84,23 +84,30 @@
 
   .sparkle {
     position: absolute;
-    width: 4px;
-    height: 4px;
+    width: 3px;
+    height: 3px;
     background: radial-gradient(circle, #fb7185, transparent);
     border-radius: 50%;
     animation: sparkle 3s ease-in-out infinite;
+  }
+
+  @media (min-width: 640px) {
+    .sparkle {
+      width: 4px;
+      height: 4px;
+    }
   }
 }
 
 @layer components {
   .romantic-button {
-    @apply bg-gradient-to-r from-romantic-rose to-romantic-blush text-white px-8 py-4 rounded-full 
-           font-dancing text-xl shadow-lg hover:shadow-xl transform hover:scale-105 
+    @apply bg-gradient-to-r from-romantic-rose to-romantic-blush text-white px-6 py-3 sm:px-8 sm:py-4 rounded-full 
+           font-dancing text-lg sm:text-xl shadow-lg hover:shadow-xl transform hover:scale-105 
            transition-all duration-300 border-2 border-white/30;
   }
 
   .romantic-card {
-    @apply bg-white/80 backdrop-blur-sm border border-romantic-rose/20 rounded-3xl 
-           shadow-2xl p-8 animate-fade-in;
+    @apply bg-white/80 backdrop-blur-sm border border-romantic-rose/20 rounded-2xl sm:rounded-3xl 
+           shadow-2xl animate-fade-in;
   }
 }

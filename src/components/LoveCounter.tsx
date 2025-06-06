@@ -41,11 +41,11 @@ const LoveCounter = ({ startDate }: LoveCounterProps) => {
 
   const TimeCard = ({ value, label }: { value: number; label: string }) => (
     <div className="text-center bg-gradient-to-br from-romantic-light to-white 
-                    rounded-2xl p-4 shadow-lg border border-romantic-rose/20">
-      <div className="dancing-text text-2xl md:text-3xl font-bold text-romantic-deep mb-1">
+                    rounded-xl sm:rounded-2xl p-2 sm:p-3 md:p-4 shadow-lg border border-romantic-rose/20">
+      <div className="dancing-text text-lg sm:text-2xl md:text-3xl font-bold text-romantic-deep mb-1">
         {value.toString().padStart(2, '0')}
       </div>
-      <div className="text-romantic-deep/70 text-xs md:text-sm uppercase tracking-wide">
+      <div className="text-romantic-deep/70 text-xs sm:text-sm uppercase tracking-wide">
         {label}
       </div>
     </div>
@@ -53,20 +53,20 @@ const LoveCounter = ({ startDate }: LoveCounterProps) => {
 
   return (
     <div>
-      <div className="flex items-center gap-2 mb-6">
-        <Calendar size={24} className="text-romantic-rose" />
-        <h2 className="dancing-text text-3xl text-romantic-deep">
+      <div className="flex items-center gap-2 mb-4 sm:mb-6">
+        <Calendar size={20} className="text-romantic-rose sm:w-6 sm:h-6" />
+        <h2 className="dancing-text text-2xl sm:text-3xl text-romantic-deep">
           Nosso Tempo Juntos
         </h2>
       </div>
 
-      <div className="text-center mb-6">
-        <p className="text-romantic-deep/80 text-lg">
+      <div className="text-center mb-4 sm:mb-6">
+        <p className="text-romantic-deep/80 text-sm sm:text-lg">
           Desde <span className="font-bold">01 de Janeiro de 2023</span>
         </p>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3 md:gap-4">
         {timeElapsed.years > 0 && (
           <TimeCard value={timeElapsed.years} label="Anos" />
         )}
@@ -79,13 +79,13 @@ const LoveCounter = ({ startDate }: LoveCounterProps) => {
         <TimeCard value={timeElapsed.seconds} label="Segundos" />
       </div>
 
-      <div className="mt-6 text-center">
+      <div className="mt-4 sm:mt-6 text-center">
         <div className="flex items-center justify-center gap-2 text-romantic-deep/70">
-          <Heart size={16} className="fill-current" />
-          <span className="text-sm">
+          <Heart size={14} className="fill-current sm:w-4 sm:h-4" />
+          <span className="text-xs sm:text-sm">
             E cada segundo vale a pena!
           </span>
-          <Heart size={16} className="fill-current" />
+          <Heart size={14} className="fill-current sm:w-4 sm:h-4" />
         </div>
       </div>
     </div>

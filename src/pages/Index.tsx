@@ -108,7 +108,7 @@ const Index = () => {
                 </div>
                 
                 <div className="romantic-card p-4 sm:p-6 lg:p-8">
-                  <LoveCounter startDate="2023-01-01" />
+                  <LoveCounter startDate="2024-10-09" />
                 </div>
               </div>
             </div>

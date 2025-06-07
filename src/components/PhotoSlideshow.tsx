@@ -3,23 +3,23 @@ import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Camera } from 'lucide-react';
 
 const PhotoSlideshow = () => {
-  // Fotos de exemplo - você pode substituir por suas fotos reais
+  // Suas fotos reais do casal
   const photos = [
     {
-      src: "/placeholder.svg",
-      caption: "Nosso primeiro encontro 💕"
+      src: "/lovable-uploads/c8176e5c-a1a4-4938-9c40-11eb2d11654f.png",
+      caption: "Momentos únicos juntos 💕"
     },
     {
-      src: "/placeholder.svg", 
-      caption: "Momentos especiais juntos 🥰"
+      src: "/lovable-uploads/2a73e674-d220-4098-8ee2-95900a8173dc.png", 
+      caption: "Sempre felizes ao seu lado 🥰"
     },
     {
-      src: "/placeholder.svg",
-      caption: "Sempre sorrindo ao seu lado 😊"
+      src: "/lovable-uploads/c8534bed-be13-4005-9222-55e7d2f179c6.png",
+      caption: "Nossas aventuras especiais 😊"
     },
     {
-      src: "/placeholder.svg",
-      caption: "Aventuras que vivemos 🌟"
+      src: "/lovable-uploads/9c95d158-2190-4f7f-a3f4-74dc7ab33749.png",
+      caption: "Sorrisos que guardarei pra sempre 🌟"
     }
   ];
 
@@ -106,7 +106,7 @@ const PhotoSlideshow = () => {
 
       <div className="mt-3 sm:mt-4 text-center">
         <p className="text-romantic-deep/70 text-xs sm:text-sm">
-          📸 Adicione suas fotos especiais aqui!
+          📸 Nossas memórias mais especiais!
         </p>
       </div>
     </div>

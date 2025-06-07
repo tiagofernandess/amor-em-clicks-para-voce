@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { Heart, Play, Pause } from 'lucide-react';
 import FloatingHearts from '../components/FloatingHearts';
@@ -60,6 +59,11 @@ const Index = () => {
       const handleCanPlayThrough = () => {
         setMusicReady(true);
         console.log('Música carregada e pronta');
+        
+        // Auto-play se a surpresa já foi iniciada
+        if (surpriseStarted) {
+          playMusic();
+        }
       };
 
       const handlePlay = () => {
@@ -93,7 +97,14 @@ const Index = () => {
         audio.removeEventListener('error', handleError);
       };
     }
-  }, []);
+  }, [surpriseStarted]);
+
+  // Auto-play quando a surpresa for iniciada e a música estiver pronta
+  useEffect(() => {
+    if (surpriseStarted && musicReady && !musicPlaying) {
+      playMusic();
+    }
+  }, [surpriseStarted, musicReady]);
 
   return (
     <div className="min-h-screen romantic-bg relative">

@@ -3,23 +3,23 @@ import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Camera } from 'lucide-react';
 
 const PhotoSlideshow = () => {
-  // Suas fotos reais do casal
+  // Suas fotos reais do casal - sequência invertida
   const photos = [
     {
-      src: "/lovable-uploads/c8176e5c-a1a4-4938-9c40-11eb2d11654f.png",
-      caption: "Momentos únicos juntos 💕"
-    },
-    {
-      src: "/lovable-uploads/2a73e674-d220-4098-8ee2-95900a8173dc.png", 
-      caption: "Sempre felizes ao seu lado 🥰"
+      src: "/lovable-uploads/9c95d158-2190-4f7f-a3f4-74dc7ab33749.png",
+      caption: "Sorrisos que guardarei pra sempre 🌟"
     },
     {
       src: "/lovable-uploads/c8534bed-be13-4005-9222-55e7d2f179c6.png",
       caption: "Nossas aventuras especiais 😊"
     },
     {
-      src: "/lovable-uploads/9c95d158-2190-4f7f-a3f4-74dc7ab33749.png",
-      caption: "Sorrisos que guardarei pra sempre 🌟"
+      src: "/lovable-uploads/2a73e674-d220-4098-8ee2-95900a8173dc.png", 
+      caption: "Sempre felizes ao seu lado 🥰"
+    },
+    {
+      src: "/lovable-uploads/c8176e5c-a1a4-4938-9c40-11eb2d11654f.png",
+      caption: "Momentos únicos juntos 💕"
     }
   ];
 

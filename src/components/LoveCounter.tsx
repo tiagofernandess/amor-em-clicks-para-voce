@@ -62,7 +62,7 @@ const LoveCounter = ({ startDate }: LoveCounterProps) => {
 
       <div className="text-center mb-4 sm:mb-6">
         <p className="text-romantic-deep/80 text-sm sm:text-lg">
-          Desde <span className="font-bold">09 de Outubro de 2024</span>
+          Desde <span className="font-bold">09 de Dezembro de 2024</span>
         </p>
       </div>
 

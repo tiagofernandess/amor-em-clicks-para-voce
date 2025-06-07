@@ -9,28 +9,91 @@ import RomanticMessage from '../components/RomanticMessage';
 const Index = () => {
   const [surpriseStarted, setSurpriseStarted] = useState(false);
   const [musicPlaying, setMusicPlaying] = useState(false);
+  const [musicReady, setMusicReady] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
 
   const startSurprise = () => {
     setSurpriseStarted(true);
-    // Inicia a música automaticamente após meio segundo
+    // Aguarda um pouco mais antes de tentar tocar a música
     setTimeout(() => {
-      if (audioRef.current) {
-        audioRef.current.play().catch(console.log);
-      }
-    }, 500);
+      playMusic();
+    }, 1000);
   };
 
-  const toggleMusic = () => {
-    if (audioRef.current) {
-      if (musicPlaying) {
-        audioRef.current.pause();
-      } else {
-        audioRef.current.play().catch(console.log);
+  const playMusic = async () => {
+    if (audioRef.current && musicReady) {
+      try {
+        audioRef.current.currentTime = 0;
+        await audioRef.current.play();
+        setMusicPlaying(true);
+        console.log('Música iniciada com sucesso');
+      } catch (error) {
+        console.log('Erro ao tocar música:', error);
+        setMusicPlaying(false);
       }
-      setMusicPlaying(!musicPlaying);
     }
   };
+
+  const pauseMusic = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      setMusicPlaying(false);
+    }
+  };
+
+  const toggleMusic = async () => {
+    if (!musicReady) {
+      console.log('Música ainda não está pronta');
+      return;
+    }
+
+    if (musicPlaying) {
+      pauseMusic();
+    } else {
+      await playMusic();
+    }
+  };
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (audio) {
+      const handleCanPlayThrough = () => {
+        setMusicReady(true);
+        console.log('Música carregada e pronta');
+      };
+
+      const handlePlay = () => {
+        setMusicPlaying(true);
+        console.log('Música está tocando');
+      };
+
+      const handlePause = () => {
+        setMusicPlaying(false);
+        console.log('Música pausada');
+      };
+
+      const handleError = (e: Event) => {
+        console.log('Erro no áudio:', e);
+        setMusicReady(false);
+        setMusicPlaying(false);
+      };
+
+      audio.addEventListener('canplaythrough', handleCanPlayThrough);
+      audio.addEventListener('play', handlePlay);
+      audio.addEventListener('pause', handlePause);
+      audio.addEventListener('error', handleError);
+
+      // Força o carregamento do áudio
+      audio.load();
+
+      return () => {
+        audio.removeEventListener('canplaythrough', handleCanPlayThrough);
+        audio.removeEventListener('play', handlePlay);
+        audio.removeEventListener('pause', handlePause);
+        audio.removeEventListener('error', handleError);
+      };
+    }
+  }, []);
 
   return (
     <div className="min-h-screen romantic-bg relative">
@@ -42,17 +105,17 @@ const Index = () => {
       <div className="sparkle" style={{ bottom: '30%', left: '25%', animationDelay: '2s' }}></div>
       <div className="sparkle" style={{ bottom: '15%', right: '15%', animationDelay: '1.5s' }}></div>
 
-      {/* Audio element for romantic music - Declaração de Amor - Murilo Huff */}
+      {/* Audio element for romantic music */}
       <audio
         ref={audioRef}
         loop
-        onPlay={() => setMusicPlaying(true)}
-        onPause={() => setMusicPlaying(false)}
         preload="auto"
+        crossOrigin="anonymous"
       >
+        {/* Múltiplas fontes de áudio para compatibilidade */}
         <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.wav" type="audio/wav" />
-        {/* Substitua o src acima pelo link da música "Declaração de Amor" do Murilo Huff */}
-        {/* Exemplo: <source src="/path-to-declaracao-de-amor-murilo-huff.mp3" type="audio/mpeg" /> */}
+        <source src="https://file-examples.com/storage/fe936e53d55a9e46cc2f74a/2017/11/file_example_MP3_700KB.mp3" type="audio/mpeg" />
+        {/* Você pode substituir essas URLs por links da música "Declaração de Amor" do Murilo Huff */}
       </audio>
 
       <div className="flex items-center justify-center min-h-screen p-2 sm:p-4">
@@ -86,13 +149,19 @@ const Index = () => {
             <div className="text-center mb-4 sm:mb-8">
               <button
                 onClick={toggleMusic}
-                className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm 
+                disabled={!musicReady}
+                className={`inline-flex items-center gap-2 backdrop-blur-sm 
                          text-romantic-deep px-3 py-2 sm:px-4 sm:py-2 rounded-full shadow-lg 
-                         hover:shadow-xl transition-all duration-300 text-sm"
+                         hover:shadow-xl transition-all duration-300 text-sm ${
+                  musicReady 
+                    ? 'bg-white/80 hover:bg-white/90 cursor-pointer' 
+                    : 'bg-gray-300/50 cursor-not-allowed'
+                }`}
               >
                 {musicPlaying ? <Pause size={18} /> : <Play size={18} />}
                 <span className="text-xs sm:text-sm font-medium">
-                  {musicPlaying ? 'Pausar Música' : 'Tocar Música'} ♫ Declaração de Amor
+                  {!musicReady ? 'Carregando...' : 
+                   musicPlaying ? 'Pausar Música' : 'Tocar Música'} ♫ Declaração de Amor
                 </span>
               </button>
             </div>

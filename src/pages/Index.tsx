@@ -9,22 +9,59 @@ const Index = () => {
   const [surpriseStarted, setSurpriseStarted] = useState(false);
   const [musicPlaying, setMusicPlaying] = useState(false);
   const [musicReady, setMusicReady] = useState(false);
+  const [musicLoading, setMusicLoading] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
 
   const startSurprise = () => {
     setSurpriseStarted(true);
-    // Aguarda um pouco mais antes de tentar tocar a música
-    setTimeout(() => {
-      playMusic();
-    }, 1000);
+    // Inicia o carregamento da música
+    setMusicLoading(true);
+    if (audioRef.current) {
+      audioRef.current.load();
+    }
+  };
+
+  const startMusic = async () => {
+    if (audioRef.current) {
+      try {
+        setMusicLoading(true);
+        audioRef.current.currentTime = 0;
+        await audioRef.current.play();
+        setMusicPlaying(true);
+        setMusicReady(true);
+        setMusicLoading(false);
+        console.log('Música iniciada com sucesso');
+      } catch (error) {
+        console.log('Erro ao tocar música:', error);
+        setMusicPlaying(false);
+        setMusicLoading(false);
+      }
+    }
+  };
+
+  const startSurpriseAndMusic = async () => {
+    await startSurprise();
+    await startMusic();
+  };
+
+  const testAudio = async () => {
+    if (audioRef.current) {
+      try {
+        await audioRef.current.play();
+        console.log('Teste de áudio bem sucedido');
+      } catch (error) {
+        console.error('Erro no teste de áudio:', error);
+      }
+    }
   };
 
   const playMusic = async () => {
-    if (audioRef.current && musicReady) {
+    if (audioRef.current) {
       try {
         audioRef.current.currentTime = 0;
         await audioRef.current.play();
         setMusicPlaying(true);
+        setMusicReady(true);
         console.log('Música iniciada com sucesso');
       } catch (error) {
         console.log('Erro ao tocar música:', error);
@@ -47,9 +84,12 @@ const Index = () => {
     }
 
     if (musicPlaying) {
-      pauseMusic();
+      if (audioRef.current) {
+        audioRef.current.pause();
+        setMusicPlaying(false);
+      }
     } else {
-      await playMusic();
+      await startMusic();
     }
   };
 
@@ -58,16 +98,13 @@ const Index = () => {
     if (audio) {
       const handleCanPlayThrough = () => {
         setMusicReady(true);
+        setMusicLoading(false);
         console.log('Música carregada e pronta');
-        
-        // Auto-play se a surpresa já foi iniciada
-        if (surpriseStarted) {
-          playMusic();
-        }
       };
 
       const handlePlay = () => {
         setMusicPlaying(true);
+        setMusicLoading(false);
         console.log('Música está tocando');
       };
 
@@ -80,15 +117,13 @@ const Index = () => {
         console.log('Erro no áudio:', e);
         setMusicReady(false);
         setMusicPlaying(false);
+        setMusicLoading(false);
       };
 
       audio.addEventListener('canplaythrough', handleCanPlayThrough);
       audio.addEventListener('play', handlePlay);
       audio.addEventListener('pause', handlePause);
       audio.addEventListener('error', handleError);
-
-      // Força o carregamento do áudio
-      audio.load();
 
       return () => {
         audio.removeEventListener('canplaythrough', handleCanPlayThrough);
@@ -97,7 +132,7 @@ const Index = () => {
         audio.removeEventListener('error', handleError);
       };
     }
-  }, [surpriseStarted]);
+  }, []);
 
   // Auto-play quando a surpresa for iniciada e a música estiver pronta
   useEffect(() => {
@@ -122,11 +157,20 @@ const Index = () => {
         loop
         preload="auto"
         crossOrigin="anonymous"
+        onError={(e) => {
+          console.error('Erro ao carregar áudio:', e);
+          setMusicReady(false);
+        }}
+        onCanPlayThrough={() => {
+          console.log('Áudio carregado e pronto para tocar');
+          setMusicReady(true);
+          if (surpriseStarted) {
+            playMusic();
+          }
+        }}
       >
-        {/* Múltiplas fontes de áudio para compatibilidade */}
-        <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.wav" type="audio/wav" />
-        <source src="https://file-examples.com/storage/fe936e53d55a9e46cc2f74a/2017/11/file_example_MP3_700KB.mp3" type="audio/mpeg" />
-        {/* Você pode substituir essas URLs por links da música "Declaração de Amor" do Murilo Huff */}
+        {/* Arquivo local da pasta music */}
+        <source src="/music/Murilo Huff - Declaração de Amor _ Pecado de Amor _ Deixaria Tudo (Ao Vivão 2)(MP3_160K).mp3" type="audio/mpeg" />
       </audio>
 
       <div className="flex items-center justify-center min-h-screen p-2 sm:p-4">
@@ -147,12 +191,14 @@ const Index = () => {
               Uma surpresa especial está esperando por você...
             </p>
             
-            <button
-              onClick={startSurprise}
-              className="romantic-button animate-heart-beat text-lg sm:text-xl px-6 py-3 sm:px-8 sm:py-4"
-            >
-              💕 Clique para começar a surpresa 💕
-            </button>
+            <div className="space-y-4">
+              <button
+                onClick={startSurprise}
+                className="romantic-button animate-heart-beat text-lg sm:text-xl px-6 py-3 sm:px-8 sm:py-4 w-full"
+              >
+                💕 Clique para começar a surpresa 💕
+              </button>
+            </div>
           </div>
         ) : (
           <div className="w-full max-w-7xl mx-auto px-2 sm:px-4">
@@ -160,18 +206,25 @@ const Index = () => {
             <div className="text-center mb-4 sm:mb-8">
               <button
                 onClick={toggleMusic}
-                disabled={!musicReady}
+                disabled={!musicReady || musicLoading}
                 className={`inline-flex items-center gap-2 backdrop-blur-sm 
                          text-romantic-deep px-3 py-2 sm:px-4 sm:py-2 rounded-full shadow-lg 
                          hover:shadow-xl transition-all duration-300 text-sm ${
-                  musicReady 
+                  musicReady && !musicLoading
                     ? 'bg-white/80 hover:bg-white/90 cursor-pointer' 
                     : 'bg-gray-300/50 cursor-not-allowed'
                 }`}
               >
-                {musicPlaying ? <Pause size={18} /> : <Play size={18} />}
+                {musicLoading ? (
+                  <span className="animate-spin">⌛</span>
+                ) : musicPlaying ? (
+                  <Pause size={18} />
+                ) : (
+                  <Play size={18} />
+                )}
                 <span className="text-xs sm:text-sm font-medium">
-                  {!musicReady ? 'Carregando...' : 
+                  {musicLoading ? 'Carregando...' : 
+                   !musicReady ? 'Preparando...' :
                    musicPlaying ? 'Pausar Música' : 'Tocar Música'} ♫ Declaração de Amor
                 </span>
               </button>

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Heart, Play, Pause } from 'lucide-react';
+import { Heart, Play, Pause, Loader2 } from 'lucide-react';
 import FloatingHearts from '../components/FloatingHearts';
 import PhotoSlideshow from '../components/PhotoSlideshow';
 import LoveCounter from '../components/LoveCounter';
@@ -10,63 +10,33 @@ const Index = () => {
   const [musicPlaying, setMusicPlaying] = useState(false);
   const [musicReady, setMusicReady] = useState(false);
   const [musicLoading, setMusicLoading] = useState(false);
+  const [musicError, setMusicError] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
 
   const startSurprise = () => {
     setSurpriseStarted(true);
-    // Inicia o carregamento da música
     setMusicLoading(true);
+    // Força o carregamento do áudio
     if (audioRef.current) {
       audioRef.current.load();
     }
   };
 
-  const startMusic = async () => {
-    if (audioRef.current) {
-      try {
-        setMusicLoading(true);
-        audioRef.current.currentTime = 0;
-        await audioRef.current.play();
-        setMusicPlaying(true);
-        setMusicReady(true);
-        setMusicLoading(false);
-        console.log('Música iniciada com sucesso');
-      } catch (error) {
-        console.log('Erro ao tocar música:', error);
-        setMusicPlaying(false);
-        setMusicLoading(false);
-      }
-    }
-  };
-
-  const startSurpriseAndMusic = async () => {
-    await startSurprise();
-    await startMusic();
-  };
-
-  const testAudio = async () => {
-    if (audioRef.current) {
-      try {
-        await audioRef.current.play();
-        console.log('Teste de áudio bem sucedido');
-      } catch (error) {
-        console.error('Erro no teste de áudio:', error);
-      }
-    }
-  };
-
   const playMusic = async () => {
-    if (audioRef.current) {
-      try {
-        audioRef.current.currentTime = 0;
-        await audioRef.current.play();
-        setMusicPlaying(true);
-        setMusicReady(true);
-        console.log('Música iniciada com sucesso');
-      } catch (error) {
-        console.log('Erro ao tocar música:', error);
-        setMusicPlaying(false);
-      }
+    if (!audioRef.current) return;
+    
+    try {
+      setMusicLoading(true);
+      // Tenta tocar a música
+      await audioRef.current.play();
+      setMusicPlaying(true);
+      setMusicLoading(false);
+      console.log('Música iniciada com sucesso');
+    } catch (error) {
+      console.error('Erro ao tocar música:', error);
+      setMusicPlaying(false);
+      setMusicLoading(false);
+      setMusicError(true);
     }
   };
 
@@ -84,12 +54,9 @@ const Index = () => {
     }
 
     if (musicPlaying) {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        setMusicPlaying(false);
-      }
+      pauseMusic();
     } else {
-      await startMusic();
+      await playMusic();
     }
   };
 
@@ -100,6 +67,11 @@ const Index = () => {
         setMusicReady(true);
         setMusicLoading(false);
         console.log('Música carregada e pronta');
+        
+        // Auto-play se a surpresa já foi iniciada
+        if (surpriseStarted) {
+          playMusic();
+        }
       };
 
       const handlePlay = () => {
@@ -110,14 +82,16 @@ const Index = () => {
 
       const handlePause = () => {
         setMusicPlaying(false);
+        setMusicLoading(false);
         console.log('Música pausada');
       };
 
       const handleError = (e: Event) => {
-        console.log('Erro no áudio:', e);
+        console.error('Erro no áudio:', e);
         setMusicReady(false);
         setMusicPlaying(false);
         setMusicLoading(false);
+        setMusicError(true);
       };
 
       audio.addEventListener('canplaythrough', handleCanPlayThrough);
@@ -132,14 +106,7 @@ const Index = () => {
         audio.removeEventListener('error', handleError);
       };
     }
-  }, []);
-
-  // Auto-play quando a surpresa for iniciada e a música estiver pronta
-  useEffect(() => {
-    if (surpriseStarted && musicReady && !musicPlaying) {
-      playMusic();
-    }
-  }, [surpriseStarted, musicReady]);
+  }, [surpriseStarted]);
 
   return (
     <div className="min-h-screen romantic-bg relative">
@@ -157,19 +124,7 @@ const Index = () => {
         loop
         preload="auto"
         crossOrigin="anonymous"
-        onError={(e) => {
-          console.error('Erro ao carregar áudio:', e);
-          setMusicReady(false);
-        }}
-        onCanPlayThrough={() => {
-          console.log('Áudio carregado e pronto para tocar');
-          setMusicReady(true);
-          if (surpriseStarted) {
-            playMusic();
-          }
-        }}
       >
-        {/* Arquivo local da pasta music */}
         <source src="/music/Murilo Huff - Declaração de Amor _ Pecado de Amor _ Deixaria Tudo (Ao Vivão 2)(MP3_160K).mp3" type="audio/mpeg" />
       </audio>
 
@@ -191,14 +146,12 @@ const Index = () => {
               Uma surpresa especial está esperando por você...
             </p>
             
-            <div className="space-y-4">
-              <button
-                onClick={startSurprise}
-                className="romantic-button animate-heart-beat text-lg sm:text-xl px-6 py-3 sm:px-8 sm:py-4 w-full"
-              >
-                💕 Clique para começar a surpresa 💕
-              </button>
-            </div>
+            <button
+              onClick={startSurprise}
+              className="romantic-button animate-heart-beat text-lg sm:text-xl px-6 py-3 sm:px-8 sm:py-4"
+            >
+              💕 Clique para começar a surpresa 💕
+            </button>
           </div>
         ) : (
           <div className="w-full max-w-7xl mx-auto px-2 sm:px-4">
@@ -216,7 +169,7 @@ const Index = () => {
                 }`}
               >
                 {musicLoading ? (
-                  <span className="animate-spin">⌛</span>
+                  <Loader2 className="animate-spin" size={18} />
                 ) : musicPlaying ? (
                   <Pause size={18} />
                 ) : (

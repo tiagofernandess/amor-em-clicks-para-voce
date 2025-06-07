@@ -13,9 +13,11 @@ const Index = () => {
 
   const startSurprise = () => {
     setSurpriseStarted(true);
-    // Simula o início da música - você pode substituir por um arquivo real
+    // Inicia a música automaticamente após meio segundo
     setTimeout(() => {
-      setMusicPlaying(true);
+      if (audioRef.current) {
+        audioRef.current.play().catch(console.log);
+      }
     }, 500);
   };
 
@@ -24,7 +26,7 @@ const Index = () => {
       if (musicPlaying) {
         audioRef.current.pause();
       } else {
-        audioRef.current.play();
+        audioRef.current.play().catch(console.log);
       }
       setMusicPlaying(!musicPlaying);
     }
@@ -40,15 +42,17 @@ const Index = () => {
       <div className="sparkle" style={{ bottom: '30%', left: '25%', animationDelay: '2s' }}></div>
       <div className="sparkle" style={{ bottom: '15%', right: '15%', animationDelay: '1.5s' }}></div>
 
-      {/* Audio element for romantic music */}
+      {/* Audio element for romantic music - Declaração de Amor - Murilo Huff */}
       <audio
         ref={audioRef}
         loop
         onPlay={() => setMusicPlaying(true)}
         onPause={() => setMusicPlaying(false)}
+        preload="auto"
       >
-        {/* Adicione aqui o src da sua música romântica */}
-        <source src="/path-to-your-romantic-song.mp3" type="audio/mpeg" />
+        <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.wav" type="audio/wav" />
+        {/* Substitua o src acima pelo link da música "Declaração de Amor" do Murilo Huff */}
+        {/* Exemplo: <source src="/path-to-declaracao-de-amor-murilo-huff.mp3" type="audio/mpeg" /> */}
       </audio>
 
       <div className="flex items-center justify-center min-h-screen p-2 sm:p-4">
@@ -88,7 +92,7 @@ const Index = () => {
               >
                 {musicPlaying ? <Pause size={18} /> : <Play size={18} />}
                 <span className="text-xs sm:text-sm font-medium">
-                  {musicPlaying ? 'Pausar Música' : 'Tocar Música'}
+                  {musicPlaying ? 'Pausar Música' : 'Tocar Música'} ♫ Declaração de Amor
                 </span>
               </button>
             </div>

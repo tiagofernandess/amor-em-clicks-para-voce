@@ -50,12 +50,12 @@ const PhotoSlideshow = () => {
         </h2>
       </div>
 
-      <div className="relative aspect-[4/3] rounded-xl sm:rounded-2xl overflow-hidden shadow-2xl bg-white/50">
+      <div className="relative aspect-[3/4] max-h-[70vh] rounded-xl sm:rounded-2xl overflow-hidden shadow-2xl bg-white/50">
         <div className="relative w-full h-full">
           <img
             src={photos[currentPhotoIndex].src}
             alt={photos[currentPhotoIndex].caption}
-            className="w-full h-full object-cover transition-all duration-500"
+            className="w-full h-full object-contain bg-gradient-to-br from-romantic-light to-white transition-all duration-500"
           />
           
           {/* Overlay gradient */}

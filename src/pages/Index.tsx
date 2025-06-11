@@ -138,9 +138,14 @@ const Index = () => {
               />
             </div>
             
-            <h1 className="dancing-text text-4xl sm:text-6xl md:text-8xl text-romantic-deep mb-4 sm:mb-6 animate-slide-up leading-tight">
-              Para Meu Amor
-            </h1>
+            <div className="text-center mb-8 sm:mb-12">
+              <h1 className="dancing-text text-4xl sm:text-6xl md:text-7xl text-romantic-deep mb-4 animate-slide-up leading-tight">
+                Luana & Tiago
+              </h1>
+              <p className="text-xl sm:text-2xl text-romantic-deep/80 animate-slide-up animation-delay-200">
+                Nossa História de Amor
+              </p>
+            </div>
             
             <p className="text-romantic-deep/70 text-base sm:text-lg md:text-xl mb-6 sm:mb-8 max-w-sm mx-auto leading-relaxed">
               Uma surpresa especial está esperando por você...
@@ -198,7 +203,7 @@ const Index = () => {
                 </div>
                 
                 <div className="romantic-card p-4 sm:p-6 lg:p-8">
-                  <LoveCounter startDate="2024-12-09" />
+                  <LoveCounter startDate="2024-11-09" />
                 </div>
               </div>
             </div>
